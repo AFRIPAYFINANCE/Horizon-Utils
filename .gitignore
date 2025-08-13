@@ -1,0 +1,15 @@
+# Node.js
+node_modules/
+package-lock.json
+
+# Environment
+.env
+
+# Logs
+*.log
+
+# Coverage
+coverage/
+
+# Build artifacts
+dist/
