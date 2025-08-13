@@ -1,16 +1,52 @@
-# Contribution Guidelines
 
-## Workflow
-1. Fork this repository
-2. Develop with:
-   - ESLint ([afripay-config](https://github.com/AfripayFinance/eslint-config))
-   - Minimum 85% test coverage
-3. Submit PR with:
+### 2. Core Implementation Files
+Create `src/tx-monitor.js`:
+```javascript
+const StellarSdk = require('stellar-sdk');
 
-```markdown
-## Changes
-- [ ] Added SEP-31 memo validation
-- [ ] Updated documentation
+/**
+ * Real-time transaction monitor for Stellar accounts
+ * @param {Object} options Configuration options
+ * @returns {Function} Function to stop monitoring
+ */
+function monitorTransactions(options) {
+  const {
+    horizonUrl = 'https://horizon-testnet.stellar.org',
+    account,
+    onPayment,
+    onError = console.error,
+    cursor = 'now'
+  } = options;
 
-## Testing
-Jest coverage: 92%
+  const server = new StellarSdk.Server(horizonUrl);
+  let closed = false;
+  
+  const eventSource = server
+    .payments()
+    .forAccount(account)
+    .cursor(cursor)
+    .stream({
+      onmessage: (payment) => {
+        if (payment.type === 'payment' && !closed) {
+          onPayment({
+            id: payment.id,
+            amount: payment.amount,
+            asset_type: payment.asset_type,
+            from: payment.from,
+            to: payment.to,
+            memo: payment.memo
+          });
+        }
+      },
+      onerror: (error) => {
+        if (!closed) onError(error);
+      }
+    });
+
+  return () => {
+    closed = true;
+    eventSource.close();
+  };
+}
+
+module.exports = { monitorTransactions };

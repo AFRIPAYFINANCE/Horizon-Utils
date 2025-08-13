@@ -1,12 +1,32 @@
 {
-  "name": "horizon-utils",
+  "name": "@afripay/horizon-utils",
   "version": "1.0.0",
-  "description": "> Tools for Stellar network interactions",
-  "main": "index.js",
+  "description": "Utilities for working with Stellar Horizon API",
+  "main": "src/index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --coverage",
+    "start": "node src/demo.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "stellar",
+    "horizon",
+    "blockchain",
+    "payments",
+    "cryptocurrency"
+  ],
+  "author": "Afripay Finance <dev@afripay.finance>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AfripayFinance/Horizon-Utils.git"
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "^13.3.0",
+    "stellar-sdk": "^11.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "sinon": "^15.0.0"
+  }
 }
